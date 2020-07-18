@@ -35,12 +35,12 @@ class Employee:
         self.department = department
         Files.change_info(self.id, self.department, title="department")
 
+
     def delete_employee(self):
         Files.delete_employee(self.id)
 
 
 
 
-x = Employee(6060,"rotem","cohen")
-x.change_first_name("eli")
+
 
