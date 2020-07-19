@@ -47,7 +47,6 @@ class Files:
                                columns=['year', 'month', 'day', 'entry_hour', 'entry_minute', 'id', 'first_name',
                                         'last_name', 'position', 'manager', 'manager_id', 'department'])
             df = df.append(df2, ignore_index=True)
-            print(df2)
             df.to_excel("reports.xlsx", index=False)
         else:
             print("already logged in")
@@ -67,16 +66,24 @@ class Files:
         else:
             print("[PROBLEM] this employee didnt sigh in")
 
-    def dayoff(id, dd, mm, yy):
-        pass
 
-    def sick_day(id, dd, mm, yy):
-        pass
+    ##dayoff, if tere is no information dd mm yy mean today/this year/this month
+    #status is for dayoff and sickday.
+    classmethod
+    def day_off(id, dd= None, mm= None, yy= None,status=None):
+        _dd,_mm,_yy = Files.is_nune(dd,mm,yy)
+        print(_dd,_mm,_yy)
+        df = pd.read_excel("reports.xlsx")
+        if df.loc[(df["id"] == id) & (df["day"] == _dd)].empty:
+            df2 = pd.DataFrame([[_dd,_mm,_yy,True,id]],columns=['day', 'month', 'year', 'vacation_day','id'])
+            df = df.append(df2, ignore_index=True)
+            df.to_excel("reports.xlsx", index=False)
+        else:
+            print('[ERORR] employee has already entered')
+
+
 
     def select_report_by(self):
-        pass
-
-    def work_time_cal(self):
         pass
 
     def get_employee_data(id):
@@ -93,8 +100,18 @@ class Files:
             hour_sum = exit_min-entry_min + ((exit_hour - entry_hour) * 60)
         return hour_sum/60
 
+    @staticmethod
+    def is_nune(dd,mm,yy):
+        date = time.localtime()
+        list_date =[yy,mm,dd]
+        for i in range (len(list_date)):
+            if list_date[i] is None:
+                list_date[i] = date[i]
+        return list_date[2],list_date[1],list_date[0]
 
 
-"""when i try to change a value we cant create it """
+
+
+
 #Files.add_to_file(6060,0,0,0,0,0,0)
-Files.exit(6060)
+Files.day_off(6060)
